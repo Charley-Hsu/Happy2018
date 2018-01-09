@@ -21,7 +21,15 @@ App({
             success: res => {
               // 可以将 res 发送给后台解码出 unionId
               this.globalData.userInfo = res.userInfo
-
+              wx.downloadFile({
+                url: res.userInfo.avatarUrl,
+                success: res => {
+                  if (res.statusCode === 200) {
+                    this.globalData.userInfo.avatarUrl = res.tempFilePath //这里的地址是指向本地图片
+                    console.log(res.tempFilePath)
+                  }
+                }
+              })
               // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
               // 所以此处加入 callback 以防止这种情况
               if (this.userInfoReadyCallback) {
