@@ -66,6 +66,7 @@ Page({
   },
   drawCanvas:function() {
     context = wx.createCanvasContext('myCanvas');
+    console.log(this.src)
     context.drawImage(this.src, ((canvasw-256)/2), 0, 256, 256)
     context.draw()
   },
@@ -103,11 +104,28 @@ Page({
     context.drawImage(hat.url, -hat.w / 2, -hat.h / 2, hat.w, hat.h)
     context.draw(true)
   }, 
+  getimg:function(){
+    wx.canvasToTempFilePath({
+      canvasId: 'myCanvas',
+      success: function (res) {
+        wx.saveImageToPhotosAlbum({
+          filePath: res.tempFilePath,
+          success: function (res) {
+            wx.showToast({ title: '保存成功' })
+          },
+          fail: function (res) {
+            console.log('fail')
+          }
+        }) 
+      }
+    })
+  },
   getUserInfo: function(e) {
     app.globalData.userInfo = e.detail.userInfo
     this.setData({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
     })
+    this.src = e.detail.userInfo.avatarUrl;
   }
 })
